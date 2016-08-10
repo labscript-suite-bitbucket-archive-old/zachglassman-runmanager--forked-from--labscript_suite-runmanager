@@ -289,17 +289,20 @@ def get_globals(groups):
         with h5py.File(filepath, 'r') as f:
             for group_name in groups_from_this_file:
                 sequence_globals[group_name] = {}
-                globals_group = f['globals'][group_name]
-                for global_name in globals_group.attrs:
-                    value = globals_group.attrs[global_name]
-                    units = globals_group['units'].attrs[global_name]
-                    expansion = globals_group['expansion'].attrs[global_name]
-                    # Replace numpy strings with python unicode strings.
-                    # DEPRECATED, for backward compat with old files
-                    value = unicode(value)
-                    units = unicode(units)
-                    expansion = unicode(expansion)
-                    sequence_globals[group_name][global_name] = value, units, expansion
+                try:
+                    globals_group = f['globals'][group_name]
+                    for global_name in globals_group.attrs:
+                        value = globals_group.attrs[global_name]
+                        units = globals_group['units'].attrs[global_name]
+                        expansion = globals_group['expansion'].attrs[global_name]
+                        # Replace numpy strings with python unicode strings.
+                        # DEPRECATED, for backward compat with old files
+                        value = unicode(value)
+                        units = unicode(units)
+                        expansion = unicode(expansion)
+                        sequence_globals[group_name][global_name] = value, units, expansion
+                except:
+                    print group_name
     return sequence_globals
 
 
